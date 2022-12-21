@@ -1,8 +1,11 @@
 package com.example.backend.service;
 
+import com.example.backend.persistence.UserEntity;
 import com.example.backend.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -12,9 +15,13 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
 
-        System.out.println("---------------------");
-        System.out.println(userRepository.getUserEntityById(1).getName());
-        System.out.println("---------------------");
+    public UserEntity getUserById(Integer id){
+        return userRepository.getUserEntityById(id);
+    }
+
+    public List<UserEntity> getAllUsers(){
+        return userRepository.findAll();
     }
 }
