@@ -1,11 +1,16 @@
 package com.example.backend.service;
 
+import com.example.backend.model.User;
 import com.example.backend.persistence.UserEntity;
 import com.example.backend.persistence.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,5 +28,37 @@ public class UserService {
 
     public List<UserEntity> getAllUsers(){
         return userRepository.findAll();
+    }
+
+    public Optional<UserEntity> insertNewUser(HttpEntity<String> user){
+        Optional<UserEntity> insertedUser = Optional.empty();
+
+        //Json input from body is turned into a user model
+        Optional<User> userFromHttpBody = jsonToUserModel(user.getBody());
+
+        //TODO Check if data is actually valid
+        if(userFromHttpBody.isPresent()){
+            UserEntity newUser = userEntityMapper(userFromHttpBody.get());
+            UserEntity returnedUser = userRepository.save(newUser);
+            insertedUser = Optional.of(returnedUser);
+        }
+
+        return insertedUser;
+    }
+
+    private UserEntity userEntityMapper(User user){
+        return new UserEntity(user.getName(),user.getEmail(), user.getStatus());
+    }
+
+    private Optional<User> jsonToUserModel(String jsonUser){
+        ObjectMapper mapper = new ObjectMapper();
+        Optional<User> user = Optional.empty();
+        try {
+            User mappedUser = mapper.readValue(jsonUser, User.class);
+            user = Optional.of(mappedUser);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }
