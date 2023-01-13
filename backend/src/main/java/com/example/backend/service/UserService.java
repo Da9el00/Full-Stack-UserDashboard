@@ -46,6 +46,41 @@ public class UserService {
         return insertedUser;
     }
 
+    public Optional<UserEntity> updateUser(Integer id, HttpEntity<String> user) {
+        Optional<UserEntity> updatedUser = Optional.empty();
+        Optional<UserEntity> oldUser = Optional.ofNullable(userRepository.getUserEntityById(id));
+
+        if(oldUser.isEmpty()){
+            return updatedUser;
+        }
+
+        Optional<User> userFromHttpBody = jsonToUserModel(user.getBody());
+
+        //TODO Check if data is actually valid
+        if(userFromHttpBody.isPresent()){
+            UserEntity userToBeUpdated = updateUser(userFromHttpBody.get(), oldUser.get());
+            UserEntity returnedUser = userRepository.save(userToBeUpdated);
+            updatedUser = Optional.of(returnedUser);
+        }
+        return updatedUser;
+    }
+
+    private UserEntity updateUser(User newUserInformation, UserEntity user){
+        if(newUserInformation.getName() != null){
+            user.setName(newUserInformation.getName());
+        }
+
+        if(newUserInformation.getEmail() != null){
+            user.setEmail(newUserInformation.getEmail());
+        }
+
+        if(newUserInformation.getStatus() != null){
+            user.setStatus(newUserInformation.getStatus());
+        }
+
+        return user;
+    }
+
     private UserEntity userEntityMapper(User user){
         return new UserEntity(user.getName(),user.getEmail(), user.getStatus());
     }

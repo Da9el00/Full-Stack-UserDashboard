@@ -38,4 +38,16 @@ public class UserEntity {
     public String getStatus() {
         return status;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

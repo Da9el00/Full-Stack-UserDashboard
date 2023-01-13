@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,4 +44,18 @@ public class UserController {
         return new ResponseEntity<>(userId, status);
     }
 
+    @PutMapping("update-user")
+    public ResponseEntity<Integer> updateUser(@RequestParam Integer id, HttpEntity<String> httpEntity){
+        Optional<UserEntity> insertionSuccess = userService.updateUser(id, httpEntity);
+        Integer userId = null;
+        HttpStatus status = HttpStatus.CONFLICT;
+        if(insertionSuccess.isPresent()){
+            userId = insertionSuccess.get().getId();
+            status = HttpStatus.OK;
+        }
+
+        return new ResponseEntity<>(userId, status);
+    }
+
 }
+
