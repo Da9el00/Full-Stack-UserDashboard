@@ -96,4 +96,15 @@ public class UserService {
         }
         return user;
     }
+
+    public Optional<UserEntity> deleteUser(Integer id) {
+
+        Optional<UserEntity> userToBeDeleted = userRepository.findById(id);
+
+        if(userToBeDeleted.isPresent()){
+            userRepository.deleteById(id);
+        }
+
+        return userToBeDeleted;
+    }
 }
