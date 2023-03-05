@@ -21,16 +21,19 @@ public class UserController {
         this.userService = userService;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user")
     public UserEntity getUserById(@RequestParam Integer id){
         return userService.getUserById(id);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/users")
     public List<UserEntity> getAllUsers(){
         return userService.getAllUsers();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("create-user")
     public ResponseEntity<Integer> addUser(HttpEntity<String> httpEntity){
         Optional<UserEntity> insertionSuccess = userService.insertNewUser(httpEntity);
@@ -44,6 +47,7 @@ public class UserController {
         return new ResponseEntity<>(userId, status);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("update-user")
     public ResponseEntity<Integer> updateUser(@RequestParam Integer id, HttpEntity<String> httpEntity){
         Optional<UserEntity> insertionSuccess = userService.updateUser(id, httpEntity);
@@ -57,6 +61,7 @@ public class UserController {
         return new ResponseEntity<>(userId, status);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("delete-user")
     public ResponseEntity<Integer> deleteUser(@RequestParam Integer id){
         Optional<UserEntity> deletionSuccess = userService.deleteUser(id);
@@ -69,8 +74,5 @@ public class UserController {
 
         return new ResponseEntity<>(userId, status);
     }
-
-
-
 }
 

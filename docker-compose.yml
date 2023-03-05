@@ -5,8 +5,6 @@ services:
     build: ./database
     container_name: database
     restart: always
-    ports:
-      - "3306:3306"
     networks:
       - spring_net
 
