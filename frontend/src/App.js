@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import UserRow from "./Userrow";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -12,6 +13,17 @@ function App() {
       });
   }, []);
 
+  function deleteUser(value) {
+    console.log("Deleting user");
+    fetch("http://127.0.0.1:8080/delete-user?id=" + value.id, {
+      method: "DELETE",
+    }).then(() => {
+      setUsers((oldValues) => {
+        return oldValues.filter((user) => user !== value);
+      });
+    });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -20,10 +32,7 @@ function App() {
       <div>
         {users.map((user) => (
           <div key={user.id} className="User">
-            <p style={{ margin: 20 }}>{user.id}</p>
-            <p style={{ margin: 20 }}>{user.name}</p>
-            <p style={{ margin: 20 }}>{user.email}</p>
-            <p style={{ margin: 20 }}>{user.status}</p>
+            <UserRow user={user} deleteUser={deleteUser} />
           </div>
         ))}
       </div>
