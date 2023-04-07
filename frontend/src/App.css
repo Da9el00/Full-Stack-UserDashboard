@@ -24,3 +24,16 @@
   align-items: center;
   justify-content: center;
 }
+
+.NewUser {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin: 2%;
+}
+
+.InputBox {
+  margin-left: 5px;
+  margin-right: 5px;
+}
