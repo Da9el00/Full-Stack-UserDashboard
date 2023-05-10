@@ -12,12 +12,14 @@ function App() {
     fetch("http://127.0.0.1:8080/users")
       .then((response) => response.json())
       .then((data) => {
+        for (const element of data) {
+          element["viewMode"] = true;
+        }
         setUsers(data);
       });
   }, []);
 
   function deleteUser(value) {
-    console.log("Deleting user");
     fetch("http://127.0.0.1:8080/delete-user?id=" + value.id, {
       method: "DELETE",
     }).then(() => {
@@ -27,9 +29,37 @@ function App() {
     });
   }
 
+  function editModeChange(id) {
+    console.log("Changing edit mode");
+    for (const element of users) {
+      if (element.id == id) {
+        element["viewMode"] = !element["viewMode"];
+      }
+    }
+    setUsers((prevUsers) => [...prevUsers]);
+  }
+
+  function updateUser(id, name, email, status) {
+    let userForUpdate = { name: name, email: email, status: status };
+    fetch("http://127.0.0.1:8080/update-user?id=" + id, {
+      method: "PUT",
+      body: JSON.stringify(userForUpdate),
+    }).then(() => {
+      for (const element of users) {
+        if (element.id == id) {
+          element.name = name;
+          element.email = email;
+          element.status = status;
+          editModeChange(id);
+          break;
+        }
+      }
+    });
+  }
+
   function addNewUserInput() {
     setNewUsers((newUsers) => [...newUsers, newUserMaxID]);
-    setnewUserMaxID((maxID) => newUserMaxID + 1);
+    setnewUserMaxID(() => newUserMaxID + 1);
   }
 
   function deleteNewUser(id) {
@@ -50,7 +80,12 @@ function App() {
       <div>
         {users.map((user) => (
           <div key={user.id}>
-            <UserRow user={user} deleteUser={deleteUser} />
+            <UserRow
+              user={user}
+              deleteUser={deleteUser}
+              editModeChange={editModeChange}
+              updateUser={updateUser}
+            />
           </div>
         ))}
       </div>

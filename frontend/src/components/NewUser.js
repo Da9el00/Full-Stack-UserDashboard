@@ -24,6 +24,7 @@ export default function UserRow(probs) {
           name: name,
           email: email,
           status: status,
+          viewMode: true,
         });
       })
       .catch(() => {
